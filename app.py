@@ -1,6 +1,6 @@
 import base64
 from flask import Flask, request, jsonify
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api
 from flask_cors import CORS
 import tensorflow as tf
 import numpy as np
@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-model = load_model(os.getcwd() + '/API/mnist_cnn.h5')
+model = load_model(os.getcwd() + '/mnist_cnn.h5')
 
 # get current directory
 print("Current Directory: ", os.getcwd())
@@ -52,4 +52,4 @@ api.add_resource(prediction, '/api/mnist/predict')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
