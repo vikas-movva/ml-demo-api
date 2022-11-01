@@ -35,16 +35,13 @@ def preproccess_image(img):
 
 class prediction(Resource):
     def post(self):
-        f = open('json_data.txt', 'w')
         data = request.get_json(force=True)  # get data from request
-        print(data, file=f)
         img = data['image']
         # convert base64 string to png
         img = preproccess_image(img)
         pred = model.predict(img)
         res = jsonify({'prediction': str(np.argmax(pred))})
         print(np.argmax(pred))
-        f.close()
         return res
 
 
