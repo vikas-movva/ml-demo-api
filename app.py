@@ -18,7 +18,15 @@ model = load_model(os.getcwd() + '/mnist_cnn.h5')
 print("Current Directory: ", os.getcwd())
 
 
-def preproccess_image(img):
+def preproccess_image(img: str) -> tf.Tensor:
+    """Decode b64 encoded image and convert to tensor
+
+    Args:
+        img (str): b64 encoded image
+
+    Returns:
+        tf.Tensor: image tensor 
+    """
     with open("imageToSave.png", "wb") as fh:
         img = re.search(r'base64,(.*)', img).group(1)
         fh.write(base64.b64decode(img + "==="))
@@ -26,11 +34,8 @@ def preproccess_image(img):
     img = tf.keras.preprocessing.image.load_img(
         "imageToSave.png", color_mode="grayscale", target_size=(28, 28))
     img = tf.keras.utils.img_to_array(img)
-    img = tf.reshape(img, [1, 28, 28, 1])
-    img = img/255
-    with open("json_data.txt", "w") as fh:
-        fh.write(str(img))
-    return img
+    x_img = tf.reshape(img, [1, 28, 28, 1])
+    return img, x_img/255
 
 
 class prediction(Resource):
@@ -38,10 +43,13 @@ class prediction(Resource):
         data = request.get_json(force=True)  # get data from request
         img = data['image']
         # convert base64 string to png
-        img = preproccess_image(img)
+        raw_img, img = preproccess_image(img)
         pred = model.predict(img)
-        res = jsonify({'prediction': str(np.argmax(pred))})
-        print(np.argmax(pred))
+        tf.keras.utils.save_img("imageToSave.png", raw_img)
+        with open("imageToSave.png", "rb") as fh:
+            pic = base64.b64encode(fh.read())
+        res = jsonify({'prediction': str(np.argmax(pred)),
+                       "img": str(pic)})
         return res
 
 
