@@ -1,3 +1,4 @@
 ml-demo-api-venv
 ml-demo-api.code-workspace
 *.png
+/test
