@@ -1,7 +1,7 @@
 import base64
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import tensorflow as tf
 import numpy as np
 import re
@@ -11,7 +11,7 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app)
 model = load_model(os.getcwd() + '/mnist_cnn.h5')
 
 # get current directory
@@ -39,6 +39,7 @@ def preproccess_image(img: str) -> tf.Tensor:
 
 
 class prediction(Resource):
+    @cross_origin
     def post(self):
         data = request.get_json(force=True)  # get data from request
         img = data['image']
