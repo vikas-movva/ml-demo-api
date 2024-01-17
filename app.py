@@ -39,7 +39,6 @@ def preproccess_image(img: str) -> tf.Tensor:
 
 
 class prediction(Resource):
-    @cross_origin
     def post(self):
         data = request.get_json(force=True)  # get data from request
         img = data['image']
