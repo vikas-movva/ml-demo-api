@@ -1,5 +1,6 @@
 ml-demo-api-venv
 ml-demo-api.code-workspace
 *.png
-/test
-/__pycache__
+test
+__pycache__
+.python-version

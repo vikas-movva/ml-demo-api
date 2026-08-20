@@ -1,5 +1,6 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8-slim-buster
+# Note: TensorFlow 2.21.0 ships wheels for cp310-cp313 only, so we use 3.13
+FROM python:3.13.9-slim-bookworm
 
 # Set the working directory in the container to /app
 WORKDIR /app
